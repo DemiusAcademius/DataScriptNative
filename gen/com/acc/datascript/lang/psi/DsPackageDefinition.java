@@ -1,0 +1,19 @@
+// This is a generated file. Not intended for manual editing.
+package com.acc.datascript.lang.psi;
+
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.psi.PsiElement;
+
+public interface DsPackageDefinition extends PsiElement {
+
+  @Nullable
+  DsIsDefault getIsDefault();
+
+  @NotNull
+  List<DsSqlCallable> getSqlCallableList();
+
+  @Nullable
+  PsiElement getId();
+
+}

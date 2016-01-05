@@ -1,0 +1,56 @@
+<idea-plugin version="2">
+  <id>com.acc.datascript</id>
+  <name>Datascript language</name>
+  <version>1.0</version>
+  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+
+  <description><![CDATA[
+      Enter short description for your plugin here.<br>
+      <em>most HTML tags may be used</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="143.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <projectConfigurable instance="com.acc.datascript.settings.SettingsForm"/>
+    <applicationService serviceImplementation="com.acc.datascript.settings.DataScriptSettings"/>
+
+    <fileTypeFactory implementation="com.acc.datascript.lang.DataScriptFileTypeFactory"/>
+    <lang.parserDefinition language="DataScript" implementationClass="com.acc.datascript.lang.DataScriptParserDefinition"/>
+    <lang.syntaxHighlighterFactory language="DataScript" implementationClass="com.acc.datascript.lang.ui.DataScriptSyntaxHighlighterFactory"/>
+    <lang.braceMatcher language="DataScript" implementationClass="com.acc.datascript.lang.ui.DataScriptBraceMatcher"/>
+    <annotator language="DataScript" implementationClass="com.acc.datascript.lang.annotators.DataScriptAnnotator"/>
+    <completion.contributor language="DataScript" implementationClass="com.acc.datascript.lang.completion.DatascriptCompletionContributor"/>
+    <lang.foldingBuilder language="DataScript" implementationClass="com.acc.datascript.lang.ui.DataScriptFoldingBuilder"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+    <action id="datascript.Generate.Script" class="com.acc.datascript.generator.GenerateAction" text="Generate DataSctipt">
+      <keyboard-shortcut keymap="$default" first-keystroke="control shift G"/>
+      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+      <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+    </action>
+  </actions>
+
+  <application-components>
+    <!-- Add your application components here -->
+    <component>
+      <implementation-class>com.acc.datascript.resources.ConnectionManager</implementation-class>
+    </component>
+  </application-components>
+
+</idea-plugin>
