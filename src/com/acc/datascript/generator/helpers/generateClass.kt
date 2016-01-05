@@ -80,6 +80,8 @@ private fun generateCall(generator: Generator, clazz: JvmClass, callGenerator: D
         if (inParamsSize == 0 && outParamsSize == 0) "null"
         else buildString {
             append("st -> {\n")
+            val offset = if (callable is DsSqlFunctionCallable) 2 else 1
+            inParams.forEachIndexed { i, parameter -> append(sqlSetter(parameter, i + offset,"")) }
             outParams.forEachIndexed { i, parameter -> append(registerer(parameter, i + 1 + inParamsSize)) }
             append("}")
         }
