@@ -45,6 +45,9 @@ public val DsSqlCallable.name: String?
         else -> null
     }?.toUpperCase()
 
+public val DsSqlCallableParameter.name: String
+    get() = this.id.text
+
 public val DsEnumElement.name: String
     get() = this.id.text
 

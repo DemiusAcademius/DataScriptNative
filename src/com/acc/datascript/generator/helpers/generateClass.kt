@@ -10,7 +10,9 @@ import com.acc.datascript.lang.extensions.findCallable
 import com.acc.datascript.lang.names.methodName
 import com.acc.datascript.lang.names.name
 import com.acc.datascript.lang.psi.*
+import com.acc.datascript.lang.types.DataScriptType
 import com.acc.datascript.lang.types.inferType
+import com.acc.datascript.lang.types.nullType
 import com.acc.datascript.utils.join
 import java.sql.Connection
 import java.sql.SQLException
@@ -74,22 +76,32 @@ private fun generateCall(generator: Generator, clazz: JvmClass, callGenerator: D
         append(") }\"")
     }
 
-    val outBuilder =
-            if (outParamsSize == 0) null
-            else buildString {
-                outParams.forEachIndexed { i, parameter -> append(registerer(parameter, i + 1 + inParamsSize)) }
-            }
+    val preparator =
+        if (inParamsSize == 0 && outParamsSize == 0) "null"
+        else buildString {
+            append("st -> {\n")
+            outParams.forEachIndexed { i, parameter -> append(registerer(parameter, i + 1 + inParamsSize)) }
+            append("}")
+        }
 
     clazz.method(methodName, longTypeRef, JvmVisibility.PUBLIC) {
         it.static = true
         it.exceptions += typeRef(SQLException::class.java)
         it.parameter("connection",typeRef(Connection::class.java))
-        it.body = "$sql;\n return call$helperName(connection,sql,x,y);"
+        it.body = "$sql;\n return call$helperName(connection,sql,x,$preparator);"
     }
 }
 
 private fun registerer(p: DsSqlCallableParameter, index: Int) =
     "st.registerOutParameter($index, Types.${p.dataType.inferType?.sqlType?.javaSqlType()});\n"
+
+
+private fun sqlSetter(p: DsSqlCallableParameter, index: Int, source: String) =
+    sqlSetter(p.dataType.inferType ?: nullType, p.name.sqlToJava(), index, source)
+
+private fun sqlGetter(col: Pair<String, DataScriptType>, index: Int) =
+    sqlGetter(col.second, col.first.sqlToJava(), index, "this", false)
+
 
 
 fun generateQuery(generator: Generator, clazz: JvmClass, queryGenerator: DsQueryGenerator) {

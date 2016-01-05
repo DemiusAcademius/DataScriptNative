@@ -63,7 +63,7 @@ public fun sqlGetter(type: DataScriptType, name: String, index: Int, prefix: Str
             }
         }
 
-public fun statementSetter(type: DataScriptType, name: String, index: Int, source: String): CharSequence =
+public fun sqlSetter(type: DataScriptType, name: String, index: Int, source: String): CharSequence =
         when (type) {
             is DataScriptType.Enum -> """
                 $source$name.setValue(st,$index);
@@ -89,3 +89,7 @@ public fun statementSetter(type: DataScriptType, name: String, index: Int, sourc
                 }
             }
         }
+
+public fun String.sqlToJava(): String =
+    this.split("_").map { it.toLowerCase() }.joinToString("_")
+
